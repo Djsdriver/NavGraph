@@ -29,7 +29,7 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val playlistViewModel by viewModel<PlaylistViewModel>()
-    private var _uri: Uri? = null
+    private var uriImage: Uri? = null
 
 
 
@@ -51,6 +51,7 @@ class MainFragment : Fragment() {
                 //обрабатываем событие выбора пользователем фотографии
                 if (uri != null) {
                     binding.imageCover.setImageURI(uri)
+                    uriImage=uri
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -66,11 +67,11 @@ class MainFragment : Fragment() {
 
         binding.buttonSave.setOnClickListener {
             val message = try {
-                if (_uri == null) {
-                    addPlaylistToDatabase()
-                } else {
-                    saveImageToPrivateStorage(_uri!!, addPlaylistToDatabase())
+                if (uriImage == null) {
 
+                } else {
+                    saveImageToPrivateStorage(uriImage!!, addPlaylistToDatabase())
+                    //addPlaylistToDatabase()
                 }
 
                 this.resources.getString(R.string.playlist_created, binding.editName.text)
@@ -81,15 +82,12 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.fragment2)
         }
     }
-
-
-
     private fun addPlaylistToDatabase(): String {
         val name = binding.editName.text.toString()
         val description = binding.editDesc.text.toString()
-        val generationName= "$name ${playlistViewModel.generateImageNameForStorage()}"
+        val generationName= "$name-${playlistViewModel.generateImageNameForStorage()}"
 
-        playlistViewModel.addPlaylist(PlaylistEntity(
+        playlistViewModel.insertPlaylistToDatabase(PlaylistEntity(
             name = name,
             description = description,
             imagePath = generationName,

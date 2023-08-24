@@ -5,16 +5,40 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.navgraph.data.db.PlaylistEntity
-import com.example.navgraph.domain.usecase.GetAllPlayListUseCase
+import com.example.navgraph.domain.usecase.GetAllPlaylistToListUseCase
+import com.example.navgraph.domain.usecase.InsertPlayListToDatabaseUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PlaylistViewModel(private val addPlaylistUseCase: GetAllPlayListUseCase) : ViewModel() {
+class PlaylistViewModel(
+    private val insertPlaylistToDatabaseUseCase: InsertPlayListToDatabaseUseCase,
+    private val getAllPlaylistToListUseCase: GetAllPlaylistToListUseCase
+    ) : ViewModel() {
     private val _playlistAdded = MutableLiveData<Boolean>()
     val playlistAdded: LiveData<Boolean> get() = _playlistAdded
 
-    fun addPlaylist(playlist: PlaylistEntity) {
+    private val _state = MutableStateFlow<PlaylistState>(PlaylistState.Empty)
+    val state: StateFlow<PlaylistState> = _state
+
+    fun insertPlaylistToDatabase(playlist: PlaylistEntity) {
         viewModelScope.launch {
-            addPlaylistUseCase.invoke(playlist)
+            insertPlaylistToDatabaseUseCase.invoke(playlist)
+        }
+    }
+
+
+
+
+    fun getAllPlaylist() {
+        viewModelScope.launch {
+            getAllPlaylistToListUseCase.getAllTracks().collect { tracks ->
+                if (tracks.isNotEmpty()) {
+                    _state.value=PlaylistState.PlaylistLoaded(tracks)
+                } else {
+                    _state.value=PlaylistState.Empty
+                }
+            }
         }
 
     }
@@ -31,4 +55,9 @@ class PlaylistViewModel(private val addPlaylistUseCase: GetAllPlayListUseCase) :
        return "cover_${System.currentTimeMillis()}.jpg"
     }
 
+}
+
+sealed class PlaylistState {
+    object Empty : PlaylistState()
+    data class PlaylistLoaded(val tracks: List<PlaylistEntity>) : PlaylistState()
 }

@@ -8,9 +8,8 @@ import com.example.navgraph.toPlaylistEntity
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistRepositoryImpl(private val appDatabase: AppDatabase): PlaylistRepository {
-    override fun getAllPlaylists(): Flow<List<PlaylistEntity>> {
-        return appDatabase.getPlaylistDao().getAllPlaylists()
-    }
+    override fun getAllPlaylists(): Flow<List<PlaylistEntity>> = appDatabase.getPlaylistDao().getAllPlaylists()
+
 
     override suspend fun insertPlaylist(playlist: PlaylistEntity) {
         appDatabase.getPlaylistDao().insertPlaylist(playlist)
