@@ -19,11 +19,16 @@ class PlaylistViewModel(private val addPlaylistUseCase: GetAllPlayListUseCase) :
 
     }
 
+//    fun generateImageNameForStorage(): String {
+//        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+//        return (1..5)
+//            .map { allowedChars.random() }
+//            .joinToString("")
+//            .plus(".jpg")
+//    }
+
     fun generateImageNameForStorage(): String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..5)
-            .map { allowedChars.random() }
-            .joinToString("")
-            .plus(".jpg")
+       return "cover_${System.currentTimeMillis()}.jpg"
     }
+
 }
