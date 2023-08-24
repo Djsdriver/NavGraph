@@ -12,9 +12,18 @@ class PlaylistViewModel(private val addPlaylistUseCase: GetAllPlayListUseCase) :
     private val _playlistAdded = MutableLiveData<Boolean>()
     val playlistAdded: LiveData<Boolean> get() = _playlistAdded
 
-    suspend fun addPlaylist(playlist: PlaylistEntity) {
+    fun addPlaylist(playlist: PlaylistEntity) {
+        viewModelScope.launch {
             addPlaylistUseCase.invoke(playlist)
+        }
 
+    }
 
+    fun generateImageNameForStorage(): String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..5)
+            .map { allowedChars.random() }
+            .joinToString("")
+            .plus(".jpg")
     }
 }

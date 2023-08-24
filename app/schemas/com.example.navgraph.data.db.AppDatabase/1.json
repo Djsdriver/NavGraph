@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fef7ff4da4072894bd917f733e6501af",
+    "identityHash": "560dfd68816e401c4d84624c11eadbd6",
     "entities": [
       {
-        "tableName": "playlists",
+        "tableName": "playlist_table",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `imagePath` TEXT NOT NULL, `trackCount` INTEGER NOT NULL)",
         "fields": [
           {
@@ -52,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fef7ff4da4072894bd917f733e6501af')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '560dfd68816e401c4d84624c11eadbd6')"
     ]
   }
 }
